@@ -1,0 +1,7 @@
+"0","OC_corrected = f.read.image(""../data/Visu_n17_processed_renorm//200ms_iso_800.jpg"") # 6.0%"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"0","raster(OC_corrected,xaxt=""n"",yaxt=""n"")"

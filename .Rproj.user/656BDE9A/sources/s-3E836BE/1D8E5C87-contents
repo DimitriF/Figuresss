@@ -1,0 +1,193 @@
+---
+title: "Denoising paper ; figures quantification"
+author: "Dimitri Fichou"
+output: pdf_document
+---
+
+```{r setup, include=FALSE,cache=F,echo=F,warning=F,message=F}
+knitr::opts_chunk$set(echo = TRUE,fig.path="../figures/",dev=c("png")) 
+library(DLC)
+```
+
+
+```{r prep_model_rbm,cache=T,echo=F,warning=F,message=F,autodep=T}
+conv <- 2
+hidden <- 8
+numepochs <- 100
+learningrate = 0.1
+momentum <- 0.5
+cd = 2
+height=512
+# Read the image
+data <- DLC::f.read.image(source = "../data/W2_254nm.jpg",height=height,Normalize = TRUE)
+# deconstruct it
+decon <- deconstruct.convol(data,margin=3,transform = F,conv=conv)
+# train the model
+set.seed(1)
+model.rbm <- rbm.train(decon,hidden = hidden,numepochs = numepochs,batchsize = 1000,verbose = T,learningrate = learningrate,cd=cd,momentum=momentum)
+```
+
+```{r prep_up,cache=T,echo=F,warning=F,message=F,autodep = TRUE}
+up <- rbm.up(model.rbm,decon)    
+# Extracting the features  
+up.recon <- reconstruct(up,3,F,dim(data)) %>% normalize
+```
+
+```{r prep_down,cache=T,echo=F,warning=F,message=F,autodep = TRUE}
+# Reconstruct in the original format    
+recon <- rbm.down(model.rbm,up) %>% reconstruct.convol(3,F,dim(data),conv) 
+```
+
+
+
+```{r prep-rolling-ball,cache=F,echo=F,warning=F,message=F,autodep = TRUE}
+wm=30
+ws=5
+```
+
+```{r prep-df,cache=T,echo=F,warning=F,message=F,autodep = TRUE}
+library(DLC) 
+source("../R/rTLC-function.R") 
+load("../data/rTLC Catechine.Rdata")
+require("baseline") 
+
+# horizontal dim
+table_dim <- xlsx::read.xlsx("../data/TableDimensionCatechine in 1 µl.xls",1)
+dim_vec <- table_dim[which(unique(data$batch$Plate) == "W2"),] %>% as.vector %>% as.numeric
+largeur <- dim_vec[1]
+dist.gauche <- dim_vec[2] - dim_vec[3]/2
+band <- dim_vec[3]
+ecart<- dim_vec[4] - dim_vec[3]
+tolerance<- 0
+# Vert dim
+vert_min <- round(c(430)*height/512)
+vert_max <- round(c(460)*height/512)
+
+# Dep var
+densitometry <- data$batch[data$batch$Plate == "W2",12]
+df <- data.frame(as.numeric(densitometry))
+
+library(EBImage)
+data_filtered <- DLC::f.read.image(source = "../data/W2_254nm.jpg",height=height,Normalize = TRUE) %>% EBImage::medianFilter(2)
+
+extracted_densitogram <- f.eat.image(image = data_filtered,largeur,dist.gauche,band,ecart ,tolerance)
+green_extracted <- 1-extracted_densitogram[,,2]
+green_corrected <- baseline(green_extracted,method="rollingBall",wm=wm,ws=ws)%>% getCorrected()
+df["Green channel with medianFilter"] <- apply(green_extracted,1,function(x){sum(x[vert_min:vert_max])})
+df["Green channel with medianFilter \nand rollingBall"] <- apply(green_corrected,1,function(x){sum(x[vert_min:vert_max])})
+
+extracted_densitogram <- f.eat.image(image = recon,largeur,dist.gauche,band,ecart ,tolerance)
+green_extracted <- 1-extracted_densitogram[,,2]
+green_corrected <- baseline::baseline(green_extracted,method="rollingBall",wm=wm,ws=ws)%>% getCorrected()
+df["Green channel with denoising"] <- apply(green_extracted,1,function(x){sum(x[vert_min:vert_max])})
+df["Green channel with denoising \nand rollingBall"] <- apply(green_corrected,1,function(x){sum(x[vert_min:vert_max])})
+
+ 
+extracted_densitogram_hidden <- 1-abind(f.eat.image(image = up.recon[,,1:3],largeur,dist.gauche,band,ecart ,tolerance)[,,1:3],f.eat.image(image = up.recon[,,4:6],largeur,dist.gauche,band,ecart ,tolerance)[,,1:3],f.eat.image(image = up.recon[,,6:8],largeur,dist.gauche,band,ecart ,tolerance)[,,2:3],along=3)
+
+extracted_densitogram_hidden_corrected <- extracted_densitogram_hidden
+for(i in seq(dim(extracted_densitogram_hidden)[3])){
+  extracted_densitogram_hidden_corrected[,,i]<-baseline(extracted_densitogram_hidden[,,i],method="rollingBall",wm=wm,ws=ws)%>% getCorrected()
+}
+
+for(i in seq(dim(extracted_densitogram_hidden)[3])){
+  df[[paste0("Hidden unit ",i," raw")]] <- apply(extracted_densitogram_hidden[,,i],1,function(x){sum(x[vert_min:vert_max])})
+}
+for(i in seq(dim(extracted_densitogram_hidden)[3])){
+  df[[paste0("Hidden unit ",i," with rolling ball")]] <- apply(extracted_densitogram_hidden_corrected[,,i],1,function(x){sum(x[vert_min:vert_max])})
+} 
+```
+
+
+
+
+```{r Denoising_Fig_7,fig.height=7.5,fig.width=3.33,dpi=300,cache=T,echo=F,warning=F,message=F,autodep = TRUE}
+# df <- df[1:17,]
+
+# par(mfrow=c(3,1),mar=c(3.5,4.5,1,1),xaxt="s",yaxt="s",bty="o",cex=0.7,oma=c(0,0,0,0),mgp=c(2.5,0.5,0))
+par(mfrow=c(3,1),mar=c(1,4,0.5,1),xaxt="s",yaxt="s",bty="o",cex=0.7,oma=c(1.5,0,0,0),mgp=c(2,0.5,0)) 
+
+# xlab1 <- "Signal intensity of video densitometry [AU]\nMedian filter"
+# xlab2 <-  "Signal intensity of video densitometry [AU]\nANN denoising"
+# xlab3 <- "Signal intensity of video densitometry [AU]\nANN feature extraction"
+xlab1 <- "Signal intensity of videodensitometry [AU]"
+xlab2 <-  "Signal intensity of videodensitometry [AU]"
+xlab3 <-  "Signal intensity of videodensitometry [AU]"
+ylab <- "Signal intensity of densitometry [AU]" 
+
+plot(df[,3],df[,1],xlab = "",ylab ="",xlim=c(0,max(df[,3])*1.05),ylim=c(0,max(df[,1])))
+truc <- data.frame(x=df[,3],y=df[,1])
+model <- lm(y~x, data=truc)
+abline(model)
+truc$x2 <- truc$x^2
+quad.model <- lm(y~x+x2, data=truc)
+timevalues <- seq(min(truc[,1]), max(truc[,2]), 0.1)
+pred <- predict(quad.model,list(x=timevalues, x2=timevalues^2))
+lines(timevalues, pred)
+par(new=T)
+plot(x=c(0,2.02),y=c(0,3),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")
+rasterImage(data_filtered[(dim(data_filtered)[1]*0.3):dim(data_filtered)[1],,],0.75,0,2.05,0.85,interpolate=F)
+symbols(x=1.4,y=0.85/2,rectangles = matrix(c(1.3,0.85),1,2),add = T,inches = F,lwd=0.5)
+lr2 <- summary(model)$r.squared
+mylabel = bquote(italic("Linear R")^2 == .(format(lr2, digits = 4)))
+text(x = 0, y = 2.4, labels = mylabel,pos=4,offset = -0.25)
+qr2 <- summary(quad.model)$r.squared
+mylabel = bquote(italic("Quadratic R")^2 == .(format(qr2, digits = 4,nsmall=4)))
+text(x = 0, y = 2.1, labels = mylabel,pos=4,offset = -0.25)
+text(x=0,y=2.8,labels="A",cex=1.5,pos=4)
+
+plot(df[,5],df[,1],xlab = "",ylab =ylab,xlim=c(0,max(df[,5])*1.05),ylim=c(0,max(df[,1])))
+truc <- data.frame(x=df[,5],y=df[,1])
+model <- lm(y~x, data=truc)
+abline(model)
+truc$x2 <- truc$x^2
+quad.model <- lm(y~x+x2, data=truc)
+timevalues <- seq(min(truc[,1]), max(truc[,2]), 0.1)
+pred <- predict(quad.model,list(x=timevalues, x2=timevalues^2))
+lines(timevalues, pred)
+par(new=T)
+plot(x=c(0,2.02),y=c(0,3),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")
+rasterImage(recon[(dim(recon)[1]*0.3):dim(recon)[1],,],0.75,0,2.05,0.85,interpolate=F)
+symbols(x=1.4,y=0.85/2,rectangles = matrix(c(1.3,0.85),1,2),add = T,inches = F,lwd=0.5)
+# rasterImage(recon,0.75,0,2.05,1.2,interpolate=F)
+# symbols(x=1.4,y=0.6,rectangles = matrix(c(1.3,1.2),1,2),add = T,inches = F,lwd=0.5)
+lr2 <- summary(model)$r.squared
+mylabel = bquote(italic("Linear R")^2 == .(format(lr2, digits = 4)))
+text(x = 0, y = 2.4, labels = mylabel,pos=4,offset = -0.25)
+qr2 <- summary(quad.model)$r.squared
+mylabel = bquote(italic("Quadratic R")^2 == .(format(qr2, digits = 4,nsmall=4)))
+text(x = 0, y = 2.1, labels = mylabel,pos=4,offset = -0.25)
+text(x=0,y=2.8,labels="B",cex=1.5,pos=4)
+
+
+plot(df[,17],df[,1],xlab = "",ylab ="",xlim=c(0,max(df[,17])*1.05),ylim=c(0,max(df[,1])))
+truc <- data.frame(x=df[,17],y=df[,1])
+model <- lm(y~x, data=truc)
+abline(model)
+truc$x2 <- truc$x^2
+quad.model <- lm(y~x+x2, data=truc)
+timevalues <- seq(min(truc[,1]), max(truc[,2]), 0.1)
+pred <- predict(quad.model,list(x=timevalues, x2=timevalues^2))
+lines(timevalues, pred)
+par(new=T)
+plot(x=c(0,2.02),y=c(0,3),type="n",xlab="",ylab="",xaxt="n",yaxt="n",bty="n")
+rasterImage(up.recon[(dim(up.recon)[1]*0.3):dim(up.recon)[1],,4],0.75,0,2.05,0.85,interpolate=F)
+symbols(x=1.4,y=0.85/2,rectangles = matrix(c(1.3,0.85),1,2),add = T,inches = F,lwd=0.5)
+# rasterImage(up.recon[,,4],0.75,0,2.05,1.2,interpolate=F)
+# symbols(x=1.4,y=0.6,rectangles = matrix(c(1.3,1.2),1,2),add = T,inches = F,lwd=0.5)
+lr2 <- summary(model)$r.squared
+mylabel = bquote(italic("Linear R")^2 == .(format(lr2, digits = 4)))
+text(x = 0, y = 2.4, labels = mylabel,pos=4,offset = -0.25)
+qr2 <- summary(quad.model)$r.squared
+mylabel = bquote(italic("Quadratic R")^2 == .(format(qr2, digits = 4)))
+text(x = 0, y = 2.1, labels = mylabel,pos=4,offset = -0.25)
+text(x=0,y=2.8,labels="C",cex=1.5,pos=4)
+
+title(xlab=xlab3,line = 1.5,xpd=NA)  
+
+
+```
+
+Figure 7: Comparison of EGCG signal responses of densitometry and video densitometry with different image preprocessing approaches. A: with median filtering. B: with ANN denoising. C: with ANN feature extraction. After the channel preprocessing or creation, all approaches use the same pipeline: chromatogram extraction, baseline correction with the rolling ball algorithm and area under the curve integration.
+
+

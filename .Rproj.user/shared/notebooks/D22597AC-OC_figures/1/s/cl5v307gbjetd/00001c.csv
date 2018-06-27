@@ -1,0 +1,11 @@
+"0","## 3744/2104"
+"0","## need dyes and preservatives dev"
+"0","layout(cbind(c(rep(1,11),rep(2,9),rep(3,9))))"
+"0","par(xaxt=""n"",yaxt=""n"",xaxs=""i"",yaxs=""i"",mar=rep(0,4))"
+"0","data = f.read.image(""../data/IMG_5448.JPG"")"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"0","raster(data)"

@@ -1,0 +1,3 @@
+"0","# axis(1,at=seq(from = 0,to = 700-60,length.out = 11),labels = seq(from = 0,to = 100,by = 10),hadj = 0.7)"
+"0","# mtext(expression(italic(hR) [F]), side=1,line = 2,cex=1)"
+"0","mtext(expression(paste(""Applied volume ("", mu, ""L)"")), side=2,line = 1.5,cex=1)"

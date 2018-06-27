@@ -1,0 +1,1 @@
+"0","text(y=max(data[,2:6])*0.95,x=-9.5,pos=4,cex=2,""F"",xpd=NA)"

@@ -1,0 +1,4 @@
+"0","# abline(reac$model)"
+"0","timevalues <- seq(min(data$y), max(data$y), 0.1)"
+"0","pred <- inversePredictCalibrate(reac$model[[n]],timevalues)[,2]"
+"0","lines(pred,timevalues)"

@@ -1,0 +1,1 @@
+"0","axis(1,at=seq(from = 1,to = 700-60,length.out = 11),labels = seq(from = 0,to = 100,by = 10),hadj = 0.7)"

@@ -1,0 +1,1 @@
+"0","axis(side = 2,at = seq(from = dim(data)[1]*22/50,to=0,length.out = 6),labels=c(0,20,40,60,80,100),las=1)"

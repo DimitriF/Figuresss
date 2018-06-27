@@ -1,0 +1,102 @@
+"0","knitr::opts_chunk$set(echo = TRUE,cache=T,fig.path = ""figures/"",dev=c(""png"",""tiff"",""pdf""))"
+"0","library(DLC)"
+"2","Loading required package: jpeg
+"
+"2","Loading required package: png
+"
+"2","Loading required package: tiff
+"
+"2","Loading required package: abind
+"
+"2","Loading required package: shiny
+"
+"2","Loading required package: shinydashboard
+"
+"2","
+Attaching package: ‘shinydashboard’
+
+"
+"2","The following object is masked from ‘package:graphics’:
+
+    box
+
+"
+"2","Loading required package: magrittr
+"
+"2","Loading required package: kohonen
+"
+"2","Loading required package: plyr
+"
+"2","Loading required package: markdown
+"
+"2","Loading required package: rgl
+"
+"2","Loading required package: ChemometricsWithR
+"
+"2","
+Attaching package: ‘ChemometricsWithR’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    loadings, screeplot
+
+"
+"2","Loading required package: RSNNS
+"
+"2","Loading required package: Rcpp
+"
+"2","
+Attaching package: ‘RSNNS’
+
+"
+"2","The following object is masked from ‘package:kohonen’:
+
+    som
+
+"
+"2","Loading required package: tsne
+"
+"2","Loading required package: baseline
+"
+"2","
+Attaching package: ‘baseline’
+
+"
+"2","The following object is masked from ‘package:stats’:
+
+    getCall
+
+"
+"2","
+Attaching package: ‘DLC’
+
+"
+"2","The following object is masked from ‘package:ChemometricsWithR’:
+
+    reconstruct
+
+"
+"2","The following object is masked from ‘package:kohonen’:
+
+    map
+
+"
+"0","library(EnvStats)"
+"2","
+Attaching package: ‘EnvStats’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    predict, predict.lm
+
+"
+"2","The following object is masked from ‘package:base’:
+
+    print.default
+
+"
+"0","  load(""~/MEGA/OC/Software/quanTLC/inst/shinyapps/quanTLC/www/CAMAG_dye_mixture.Rdata"")"
+"0","reac = data"
+"0","source(""~/MEGA/OC/Software/quanTLC/inst/shinyapps/quanTLC/f.plot.array.R"")"

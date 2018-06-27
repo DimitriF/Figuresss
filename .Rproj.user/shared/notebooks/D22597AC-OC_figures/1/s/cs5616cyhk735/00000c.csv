@@ -1,0 +1,13 @@
+"0","# axis(2,at=seq(from = 50,to = 496,by = (496-50)/10),labels = seq(from = 0,to = 100,by = 10),las=2,hadj = 0.7)"
+"0","## after appli"
+"0","data = f.read.image(source = paste0(""../data/n"",n,""_dev.jpg""))"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"0","data1 = data[(dim(before_appli)[1]-250):(dim(data)[1]-50)-15,,]"
+"0","data2 = data[250:50,dim(before_appli)[2]:1,]"
+"0","# data1 = data[497:dim(data)[1],500:900,]"
+"0","# data2 = data[496:1,505:920,]"
+"0","par(yaxs=""i"",xaxs=""i"",xaxt=""n"",mar=c(0.5,2.5,0.5,0))"

@@ -1,0 +1,12 @@
+"0","  "
+"0","path = paste0(""~/MEGA/OC/data/Visu_export/visu_dyes_n2_R_auto.jpg"")"
+"0","data = f.read.image(path)"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"0","data = data[(dim(data)[1]/2):(dim(data)[1]-10),dim(data)[2]:10,]"
+"0","if(normal){data = normalize(data)}"
+"0","# store[[""CAMAG""]] = f.eat.image(data,largeur = 100,band = 4,dist.gauche = 4.5,ecart = 2.25,plotting = F,tolerance = 0)"
+"0","chrom.raster(data,x/2+20,edge = 10,normalization = F)"

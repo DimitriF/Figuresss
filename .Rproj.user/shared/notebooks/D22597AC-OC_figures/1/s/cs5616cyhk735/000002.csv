@@ -1,0 +1,18 @@
+"0","n=2"
+"0","# layout(cbind(c(1,1,1,2,3,3,3,4),c(5,5,5,5,6,6,6,6)))"
+"0","layout(rbind(c(1,2),c(3,4),c(3,4),"
+"0","             c(6,6),c(6,6),c(6,6),"
+"0","             c(5,5),c(5,5),c(5,5)"
+"0","             ))"
+"0","par(mgp=c(1.5,0.5,0))"
+"0","## before appli"
+"0","before_appli = f.read.image(source = paste0(""../data/n"",n,""_clean.jpg""))"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"0","before_appli1 = before_appli[(dim(before_appli)[1]-100):dim(before_appli)[1]-35,,]"
+"0","before_appli2 = before_appli[100:1+20,dim(before_appli)[2]:1,]"
+"0","par(yaxs=""i"",xaxs=""i"",xaxt=""n"",mar=c(0.5,2.5,0.5,0))"
+"0","raster(before_appli1,yaxt=""n"")"

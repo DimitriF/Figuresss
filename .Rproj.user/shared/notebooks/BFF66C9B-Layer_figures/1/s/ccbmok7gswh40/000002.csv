@@ -1,0 +1,17 @@
+"0","data = f.read.image(paste0(""/home/clau/Dropbox/layer_printing/layer printing pictures/developped plate/plate_"",c(69,73),""_developed.jpg""),height=992,ls.format = T)"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"0","par(xaxt=""n"",yaxt=""n"",mar=c(0,0,0,0),xaxs=""i"",yaxs=""i"") "
+"0","par(mfrow=c(1,2))"
+"0","for(i in seq(length(data))){"
+"0","  raster(data[[i]][700:1,,],interpolate = T)"
+"0","  text(x=0,y=620,labels=c(""A"",""B"")[i],cex=1.5,pos=4)"
+"0","}"

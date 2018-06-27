@@ -1,0 +1,4 @@
+"0","pos = structure(list(x = c(3, 8, 13,"
+"0","28)-1, y = c(310, 250,"
+"0","200, 200)), .Names = c(""x"", ""y""))"
+"0","text(x=pos$x,y=pos$y,labels = c(""PP"", ""EP"", ""MP"", ""BA""),pos=4,cex=1,srt=0)"

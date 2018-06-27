@@ -1,0 +1,6 @@
+"0","for(j in seq(3)){"
+"0","  plot(x=seq(-0.061,1,length.out = 126),y=data[i,126:1,j],col=c(""red"",""green"",""blue"")[j],type=""l"","
+"0","       xaxt=c(""n"",""n"",""s"")[j],ylim=c(0,1),yaxt=c(""n"",""n"",""s"")[j],"
+"0","       xlab=expression(italic(R)['F']),ylab=""Pixel intensity (AU)"")"
+"0","  par(new=T)"
+"0","}"

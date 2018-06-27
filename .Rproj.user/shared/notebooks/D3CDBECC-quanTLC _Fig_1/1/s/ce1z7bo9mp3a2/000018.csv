@@ -1,0 +1,1 @@
+"0","f.plot.array(reac$extracted,id = 3,hauteur = width,Zf = Zf,dist.bas = dist.bas,reconstruct = T,main="""",xlim=c(dim(reac$extracted)[2]*0.95,dim(reac$extracted)[2]*0.6))"

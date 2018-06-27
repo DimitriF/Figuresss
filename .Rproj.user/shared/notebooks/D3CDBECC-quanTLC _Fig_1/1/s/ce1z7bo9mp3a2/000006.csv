@@ -1,0 +1,1 @@
+"0","axis(side=2,at=seq(dim(reac$image)[2]/width*dist.bas,dim(reac$image)[2]/width*Zf,length.out = 11),labels=seq(0,1,length.out = 11)*100)"

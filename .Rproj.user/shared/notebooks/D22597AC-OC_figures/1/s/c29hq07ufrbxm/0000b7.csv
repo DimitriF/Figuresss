@@ -1,0 +1,7 @@
+"0","CAMAG = f.read.image(""../data/visu_n17_50ms.jpg"") # 3.7%"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"0","raster(CAMAG,xaxt=""n"",yaxt=""n"")"

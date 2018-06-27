@@ -1,0 +1,39 @@
+"0","data = DLC::f.read.image(dir(""../data/"",pattern = ""propolis-silicate-"",full.names = T),height = 126,ls.format = T)"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"2","Error in readJPEG(source = i, native = F) : 
+  JPEG decompression error: Not a JPEG file: starts with 0x4d 0x4d
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"0","par(mar=c(0,0,0,0),xaxt=""n"",yaxt=""n"",bty=""n"", xaxs=""i"", yaxs=""i"")"
+"0","par(bg = ""white"")"
+"0","plot(c(0,6),c(0,6.75),type=""n"")"

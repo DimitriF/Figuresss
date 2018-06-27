@@ -1,0 +1,1 @@
+"0","f.plot.array(reac$preprocessed,id = 3,hauteur = width,Zf = Zf,dist.bas = dist.bas,reconstruct = F,main="""",xlim=c(dim(reac$preprocessed)[2]*0.95,dim(reac$preprocessed)[2]*0.6),channel = 1)"

@@ -1,0 +1,5 @@
+"0","# abline(h=seq(0,800,by=10),col=""red"")"
+"0","# abline(h=seq(0,800,by=50),col=""black"")"
+"0","index=c(740,640,540,440,340,240,140,40) + 20"
+"0","marge = 30"
+"0","for(i in index){abline(h=c(index-marge,index+marge),lty=2)}"

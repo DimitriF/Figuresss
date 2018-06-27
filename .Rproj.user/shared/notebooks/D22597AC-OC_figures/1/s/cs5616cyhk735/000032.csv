@@ -1,0 +1,5 @@
+"0","legend(""topright"",legend=c(expression(paste(""0.3 "", mu, ""L"")),"
+"0","                           expression(paste(""0.6 "", mu, ""L"")),"
+"0","                           expression(paste(""0.9 "", mu, ""L"")),"
+"0","                           expression(paste(""1.2 "", mu, ""L"")),"
+"0","                           expression(paste(""1.5 "", mu, ""L""))),cex = 1,pch=1,col=c(1,2,3,4,5),bty = ""n"")"

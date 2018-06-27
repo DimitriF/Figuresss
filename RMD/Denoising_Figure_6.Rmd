@@ -1,0 +1,132 @@
+---
+title: "Denoising paper ; figures"
+author: "Dimitri Fichou"
+date: "March 3, 2016"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,fig.path="../figures/",dev=c("png")) 
+library(DLC)
+```
+
+```{r prep, cache=T,echo=F,warning=F,message=F}
+conv_maxi <- 2
+hidden_maxi <- 128 # change here for timing
+numepochs_maxi <- 100 # change here for timing
+batchsize_maxi <- 1000
+learningrate_maxi <- 0.1
+momentum_maxi <- 0.5
+cd_maxi <- 2
+
+set.seed(1)
+
+data_365 <- f.read.image("../data/rTLC_demopicture.JPG",height = 256)
+decon_365 <- data_365 %>% deconstruct.convol(margin = 3,transform = F,conv_width = conv_maxi)
+model_365 <- rbm.train(decon_365,hidden = hidden_maxi,numepochs = numepochs_maxi,batchsize = batchsize_maxi,learningrate = learningrate_maxi,momentum = momentum_maxi,cd = cd_maxi,verbose = T)
+recon_365 <- decon_365 %>% rbm.up(model_365,.) %>% rbm.down(model_365,.) %>% reconstruct.convol(margin=3,transform = F,dimension = dim(data_365),conv_width = conv_maxi,take_center = F)
+```
+
+
+
+```{r dif_light_big_net_365nm_prep,fig.height=9,fig.width=7,dpi=300, cache=T,echo=F,warning=F,message=F,autodep = TRUE}
+up_365nm_big_net  <- decon_365 %>% rbm.up(model_365,.) %>% reconstruct(margin=3,transform = F,dimension = dim(data_365)) 
+```
+
+
+
+
+
+```{r SI_1_prep}
+data = f.read.image("../data/rTLC_demopicture.JPG",height = 256)
+up_eated = DLC::f.eat.image(up_365nm_big_net,dist.gauche = 19)
+data_eated = DLC::f.eat.image(data,dist.gauche = 19)
+data_binded = abind(
+  data_eated[,,1]%>% baseline::baseline(method="rollingBall",wm=15,ws=5) %>% getCorrected(),
+  data_eated[,,3]%>% baseline::baseline(method="rollingBall",wm=15,ws=5) %>% getCorrected(),
+  1-up_eated[,,118],
+  up_eated[,,31],
+  along=3)
+
+```
+
+
+
+```{r Denoising_Fig_6,fig.width=3.33,dpi=300,fig.height=7.5}
+resos = round(c(c(0,0.95,0,1.18),c(
+  2.1/3.2,0,2.4/1.8,0,
+  2.4/2.3,0,2.4/2,0,
+  2.4/3.1,0,2.6/2.3,0,
+  2.1/2.2,0,2.4/2,0,
+  2.4/2.8,0,2.4/1.8,0
+)*1.18),2) %>% matrix(nrow=6,ncol=4,byrow = T)
+layout(rbind(rep(13,6),rep(14,6),rep(15,6),rep(16,6),matrix(1:12,nrow=2)))
+par(xaxt="n",mar=c(0.25,0.25,1.5,0.25),oma=c(0,0,0,0),mgp=c(1.5,0.5,0))
+it=0
+for(i in c(5,12,14,15,19,20)){
+  it=1+it
+  for(j in c(1,3)){
+    if(i == 5){int = 192:165}else{int=175:150}
+    if(i == 5 && j==3){j=4}
+    if(i == 5 && j==1){j=2}
+    plot(data_binded[i,int,j],type="l",col=c("red","blue","orange","blue")[j],ylim=c(0,max(data_binded[i,int,j])),
+         main=paste0(
+           "Track ",i,
+           # "\n",if(j %in% c(1,2)){"Channel "}else{"Unit "},c("red","blue","orange","blue")[j],
+           "\n",resos[it,j]),
+         yaxt= "n",cex.main=0.7
+         )
+    v = data_binded[i,int,j]
+    p = pracma::findpeaks(v)
+    abline(v=p[,2])
+    abline(h=p[,1]/2,col=c(3,4))
+    abline(h=0)
+    if(i==5){text(x=0,y=max(data_binded[i,int,j])*1.15,labels=c("E","E","D","F")[j],cex=1.5,pos=4,xpd=NA,offset = -0.25);print(j)}
+  }
+}
+
+bands = structure(list(x = c(281.509275326897, 323.180056214102, 343.452327997067, 
+423.978296468288, 444.250568251253), y = c(96.3374243733794, 
+95.3417458945549, 93.8482281763181, 93.8482281763181, 94.8439066551426
+)), .Names = c("x", "y"))
+
+bands_blue = structure(list(x = 138, y = 80), .Names = c("x", 
+"y"))
+
+par(mar=rep(0.25,4),yaxs="i",xaxs="i",bty="o",xaxt="n",yaxt="n")
+
+## data
+data %>% normalize %>% chrom.raster(x = 140,lwd=0.5)
+text(x=0,y=220,pos=4,labels="A",cex=1.5,col="white",offset=0.2)
+symbols(fg="white",lty=1,y=bands_blue$y,x=bands_blue$x,rectangles =matrix(rep(25,2),ncol=2),inches = F,add = T)
+symbols(fg="white",lty=1,y=bands$y,x=bands$x,rectangles =matrix(rep(20,10),ncol=2),inches = F,add = T)
+text(y=rep(10,20),x=seq(from=55,to=445,length.out = 20),labels=1:20,col="white",cex=0.6)
+# text(x=0,y=230,labels="A",cex=1.5,pos=2,xpd=NA,offset = 3)
+## blue
+up_365nm_big_net[,,31] %>% normalize %>% chrom.raster(x = 140,lwd=0.5)
+text(x=0,y=220,pos=4,labels="B",cex=1.5,col="white",offset=0.2)
+symbols(fg="white",lty=1,y=bands_blue$y,x=bands_blue$x,rectangles =matrix(rep(25,2),ncol=2),inches = F,add = T)
+text(x=0,y=230,labels="B",cex=1.5,pos=2,xpd=NA,offset = 3)
+## orange
+up_365nm_big_net[,,118] %>% normalize %>% chrom.raster(x = 140,lwd=0.5)
+text(x=0,y=220,pos=4,labels="C",cex=1.5,col=1,offset=0.2)
+symbols(fg=1,lty=1,y=bands$y,x=bands$x,rectangles =matrix(rep(20,10),ncol=2),inches = F,add = T)
+text(x=0,y=230,labels="C",cex=1.5,pos=2,xpd=NA,offset = 3)
+## deriv
+up_365nm_big_net[,,39] %>% normalize %>% chrom.raster(x = 140,lwd=0.5)
+text(x=0,y=220,pos=4,labels="D",cex=1.5,col="white",offset=0.2)
+text(x=0,y=230,labels="D",cex=1.5,pos=2,xpd=NA,offset = 3)
+
+# text(x=0,y=210,pos=4,labels="A",cex=1.5,col="white")
+# title(main="Original picture")
+# up_365nm_big_net[,,118] %>% normalize %>% chrom.raster(x = 140,lwd=0.5)
+# text(x=0,y=210,pos=4,labels="B",cex=1.5,col="black")
+# up_365nm_big_net[,,31] %>% normalize %>% chrom.raster(x = 140,lwd=0.5)
+# text(x=0,y=210,pos=4,labels="C",cex=1.5,col="white")
+# symbols(x=140,y=dim(up_365nm_big_net[,,31])[1] - 178,rectangles = rbind(c(25,30)),inches = F,add = T,fg = "white")
+# up_365nm_big_net[,,39] %>% normalize %>% chrom.raster(x = 140,lwd=0.5)
+# text(x=0,y=210,pos=4,labels="D",cex=1.5,col="white")
+```

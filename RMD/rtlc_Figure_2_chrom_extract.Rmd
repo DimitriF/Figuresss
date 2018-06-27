@@ -1,0 +1,55 @@
+---
+title: "rTLC-paper-FIg-chrom_extract"
+author: "Dimitri Fichou"
+date: "March 21, 2016"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,fig.path="../figures/")
+library(DLC)
+```
+
+
+```{r rtlc_fig_2,fig.height=5,fig.width=3.54,dpi=300, cache=T,echo=F,warning=F,message=F,eval=T,dev=c('jpeg')}
+image <- DLC::f.read.image("../data/propolis-silicate-1.jpg",126)
+layout(rbind(c(1),c(1),c(2),c(2)))
+par(mar=c(0,0,0,0),xaxt="n",yaxt="n",bty="n")
+plot(x=c(-60,200),y=c(1.1,4),type="n")
+rasterImage(image,xleft = 0,xright = 200,ybottom = 3,ytop = 4,interpolate = F)
+text(x=-60,y=3.5,pos=4,labels = "Input\ndata",cex=1.2)
+text(x=-65,y=2.75,pos=4,labels = "Information\non track\nposition",cex=1)
+arrows(x0=-5,x1=5,y0=2.75,y1=2.75,lwd=1,length = 0.05)
+text(x=-60,y=2,pos=4,labels = "Extracted\ndata",cex=1.2)
+
+source("../R/rTLC-function.R")
+largeur<-200
+band=8
+dist.gauche=7
+ecart=2.05
+tolerance=1
+nbr.band<-round((largeur-2*dist.gauche)/(band+ecart))
+data <- f.eat.image(image,largeur,dist.gauche,band,ecart,tolerance)
+for(i in seq(nbr.band)){
+  x= mean(c(dist.gauche+tolerance+(i-1)*(band+ecart),dist.gauche-tolerance+band+(i-1)*(band+ecart)))
+  arrows(x0=x,x1=x,y0=2.9,y1=2.6,lwd=2,length = 0.05)
+  data2<-f.rebuilt(data[i,,1],data[i,,2],data[i,,3])
+  rasterImage(data2,dist.gauche+tolerance+(i-1)*(band+ecart),1.5,dist.gauche-tolerance+band+(i-1)*(band+ecart),2.5)
+}
+i=5
+x= mean(c(dist.gauche+tolerance+(i-1)*(band+ecart),dist.gauche-tolerance+band+(i-1)*(band+ecart)))
+arrows(x0=x,x1=x,y0=1.4,y1=1.1,lwd=2,length = 0.05)
+text(x=dist.gauche-tolerance+band+(i-1)*(band+ecart),y=1.25,pos=4,labels = "Horizontal mean calculation",cex=1)
+par(mar=c(4,4,0,0),xaxt="n",yaxt="n",bty="n",mgp=c(2.5,1,0))
+for(j in seq(3)){
+  plot(x=seq(-0.061,1,length.out = 126),y=data[i,126:1,j],col=c("red","green","blue")[j],type="l",
+       xaxt=c("n","n","s")[j],ylim=c(0,1),yaxt=c("n","n","s")[j],
+       xlab=expression(italic(R)['F']),ylab="Pixel intensity (AU)")
+  par(new=T)
+}
+text(x=-0.1,y=0.9,pos=4,labels = "Densitogram",cex=1.2)
+
+par(new=F)
+
+```
+

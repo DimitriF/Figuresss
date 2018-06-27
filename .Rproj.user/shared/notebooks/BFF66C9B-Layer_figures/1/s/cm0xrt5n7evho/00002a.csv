@@ -1,0 +1,15 @@
+"0","data = f.read.image(source = ""Screenshot HPTLC plate.png"",301)
+"
+"2","Error in readTIFF(i, native = F) : 
+  unable to open Screenshot HPTLC plate.png
+"
+"2","Error in readJPEG(source = i, native = F) : 
+  unable to open Screenshot HPTLC plate.png
+"
+"2","Error in readPNG(source = i, native = F) : 
+  unable to open Screenshot HPTLC plate.png
+"
+"1","[1]"
+"1"," ""one file is not a tiff jpeg or png"""
+"1","
+"

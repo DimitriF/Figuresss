@@ -1,0 +1,5 @@
+"0","d = reac$Integration$PeakList#[reac$Integration$PeakList$Channel == 1 && reac$Integration$PeakList$Track == 3,]"
+"0","d=d[d$Track==3&d$Channel==1,]"
+"0","for(i in seq(nrow(d))){"
+"0","  abline(v=d[i,8:9],col=c(""green"",""red""))"
+"0","}"

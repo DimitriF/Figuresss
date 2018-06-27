@@ -1,0 +1,5 @@
+"0","data = data.frame(x=reac$batch[,""Quantity [AU]""],y=reac$batch[,n])"
+"0","data$x[!reac$batch$Standard] = reac$batch[,paste0(""Prediction "",n)][!reac$batch$Standard]"
+"0","data$x2=data$x^2"
+"0","data$y2 = data$y^2"
+"0","plot(x = data$x,y=data$y,xlab = ""Quantity [AU]"",ylab = ""Area of the selected peak [AU]"",pch = 4,col=(!reac$batch$Standard)+1)"

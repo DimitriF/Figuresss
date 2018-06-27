@@ -1,0 +1,1 @@
+"0","text(x=c(2.35),y=c(5:0)+0.5,labels=c(""Densitogram"",""Baseline removal"",""Peak alignment"",""Standardization"",""PCA"",""Outlier detection""),pos=2,cex=0.75)"

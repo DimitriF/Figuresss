@@ -1,0 +1,2 @@
+"0","knitr::opts_chunk$set(dpi=300, cache=T,echo=F,warning=F,message=F,autodep=T,dev=c(""tiff""),eval=T)"
+"0","library(DLC)"

@@ -1,0 +1,116 @@
+---
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T,cache = T,dev="png",error = F,comment = F,warning = F,message = F,dpi=300,fig.path="../figures/")
+library(DLC)
+data <- f.read.image("../data/rTLC_demopicture.JPG",height=1000)
+
+data.eated = f.eat.image(data)
+
+data = data[300:950,150:1850,]
+```
+
+```{r Intro_data_analysis,fig.width = 7,fig.height = 4}
+# l <- cbind(rep(9,4),rep(9,4),rep(9,4),rep(9,4),rep(9,4),rep(10,4),rep(11,4),rep(12,4))
+# layout(rbind(l,c(1:8))) 
+layout(
+  rbind(
+    c(1,1,1,2),
+    # c(3,3,4,4,5,5)
+    c(3,3,4,4)
+  )
+)
+
+
+
+par(mgp=c(1.5,0.5,0),oma=c(0,0,0,0))
+
+## raster
+par(mar=c(2.5,3,0,0.25),xaxt="n",yaxt="n",xaxs="i",yaxs="i",bty="n")
+plot(c(0,dim(data)[2]),c(0,dim(data)[1]),type="n",ylab=expression(italic(hR)['F']),xlab="Sample")
+rasterImage(data,0,0,dim(data)[2],dim(data)[1])
+# data %>% raster()
+par(xaxt="s",yaxt="s")
+drugs = c("Mentha","Sage","Melissa","Melissa","Artichoke",
+          "Mentha","Sage","Melissa","Melissa","Sage",
+          "Mentha","Sage","Melissa","Sage","Artichoke",
+          "Mentha","Sage","Melissa","Sage","Artichoke")
+drugs = factor(drugs)
+it=1
+colors_drugs = 1:4
+for(i in levels(drugs)){
+  axis(1,at=seq(75,1650,by=80)[drugs == i],labels=seq(20)[drugs == i],col.axis=colors_drugs[it])
+  it=it+1
+}
+# mtext("Sample",side = 1,line = 2,cex=1)
+axis(2,at=seq(30,600,length.out = 11),labels=seq(0,100,length.out = 11))
+# mtext(expression(italic(hR)['F']),side=2,line=2,cex=1)
+
+# text(x=seq(19,420,by=20.5),y=rep(5,20),labels=seq(20),col="white")
+x=75+4*80
+# symbols(x=x,y=dim(data)[1]/2,rectangles=matrix(c(80,dim(data)[1]),ncol=2),add = T,inches = F,fg = "red",lwd=3)
+
+# text(x=c(0),y=600,labels=c("A"),col=c("white"),cex=2,pos=4)
+mtext("A", side = 2, line = 1.5, outer = FALSE, at = dim(data)[1]*0.95,
+      adj = NA, cex = 1.2, col =NA, font = NA,las=1)
+
+## chroms
+par(new=F)
+par(mar=c(2.5,1.5,0,0.5),xaxt="n",yaxt="n",xaxs="r",yaxs="i",bty="o")
+inc = 0
+color <- c('red','green','blue','black')
+for(i in seq(dim(data)[3])){
+  if(i == 1){
+    plot(x=data[dim(data)[1]:1,x,i],y=seq(dim(data)[1]),xlim=c(0,1),type='l',col=color[i],xaxt="s",xlab="Intensity [AU]",ylab="",yaxt="n")
+  }else{
+    plot(x=data[dim(data)[1]:1,x,i],y=seq(dim(data)[1]),xlim=c(0,1),type='l',col=color[i],xlab="n",ylab="n")
+  }
+  par(new=T)
+}
+# text(x=0.25,y=620,labels="B",col="black",cex=2,pos=4)
+# mtext(,side=1,line=2,cex=1)
+# axis(1)
+mtext("B", side = 2, line = 0.5, outer = FALSE, at = dim(data)[1]*0.95,
+      adj = NA, cex = 1.2, col =NA, font = NA,las=1)
+
+## PCA
+par(mar=c(2.5,3,0.25,0.25),xaxt="s",yaxt="s",yaxs="r")
+data_preprocessed = prospectr::standardNormalVariate(data.eated[,,3])
+model = ChemometricsWithR::PCA(data_preprocessed)$scores
+plot(model[,1:2],type="n");text(model[,1:2],labels=1:20,col=as.numeric(drugs))
+
+mtext("C", side = 2, line = 1.5, outer = FALSE, at = max(model[,2])*0.95,
+      adj = NA, cex = 1.2, col =NA, font = NA,las=1)
+
+## HCA
+par(mar=c(1,3,0.25,0.25),xaxt="s",yaxt="s")
+rownames(data_preprocessed) = seq(20)
+lab=seq(20)
+col=as.numeric(drugs)
+d=dist(data_preprocessed)
+fit = hclust(d)
+colLab <- function(n) {
+    if(is.leaf(n)) {
+      a <- attributes(n)
+      labcolor <- col[as.numeric(a$label)]
+      attr(n, "nodePar") <- c(a$nodePar, list(lab.col = labcolor, cex=1, col=labcolor, pch=16 ))
+      attr(n,"label") = lab[as.numeric(a$label)]
+    }
+    n
+}
+fit = as.dendrogram(fit)
+fit = dendrapply(fit,colLab)
+plot(fit,main="",xlab="",hang=-1,ylab="Euclidean distance")
+mtext("D", side = 2, line = 1.5, outer = FALSE, at = max(d)*0.98,
+      adj = NA, cex = 1.2, col =NA, font = NA,las=1)
+
+legend("topright",col = 1:4,legend = levels(drugs),pch=16)
+
+## tsne
+# par(mar=c(2.5,2.5,0.25,0.25),xaxt="s",yaxt="s")
+# data_preprocessed = prospectr::standardNormalVariate(data.eated[,,2])
+# model = Rtsne::Rtsne(data_preprocessed,perplexity=5)$Y
+# plot(model[,1:2],type="n");text(model[,1:2],labels=1:20,col=(arti)+1)
+```

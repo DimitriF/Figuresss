@@ -1,0 +1,6 @@
+"0","rasterImage(DLC::f.read.image(""/home/clau/Dropbox/rTLC/xls_screen_shot.jpg"",126),xleft = 7,xright = 8.5,ytop = 10,ybottom = 9)"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"

@@ -1,0 +1,8 @@
+"0","data = ""../data/SA02.png"" %>% f.read.image"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 20617 (0x5089)
+"
+"2","Error in readJPEG(source = i, native = F) : 
+  JPEG decompression error: Not a JPEG file: starts with 0x89 0x50
+"
+"0","data %>% raster"

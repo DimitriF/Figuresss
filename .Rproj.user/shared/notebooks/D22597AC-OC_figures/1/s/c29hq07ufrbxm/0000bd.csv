@@ -1,0 +1,2 @@
+"0","# par(xaxt=""s"",yaxt=""n"",xaxs=""r"",yaxs=""r"")"
+"0","plot(x=1-CAMAG[,x_CAMAG,2],y=seq(dim(CAMAG)[1]),xlim=c(0,1),ylim=c(dim(CAMAG)[1],1),xlab="""",xaxt=""n"",ylab="""",main="""",type=""l"",yaxt=""n"",lwd=0.5)"

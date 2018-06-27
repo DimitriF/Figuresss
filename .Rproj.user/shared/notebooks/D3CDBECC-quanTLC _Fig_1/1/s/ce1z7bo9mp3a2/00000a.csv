@@ -1,0 +1,1 @@
+"0","axis(side=1,at=seq(dim(reac$image)[2]/width*(dist.gauche+band/2),by=dim(reac$image)[2]/width*(band+ecart),length.out = nbr.band),labels=c(0.5,1,1.5,2,2.5,2,2,2),tick = F,line = -0.5)"

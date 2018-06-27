@@ -1,0 +1,1 @@
+"0","axis(1,at=seq(from = 1,to = dim(data)[2]*0.92,by=20),labels = seq(from = 0,to = round(dim(data)[2]*0.9/10),by = 2),hadj = 0.7)"

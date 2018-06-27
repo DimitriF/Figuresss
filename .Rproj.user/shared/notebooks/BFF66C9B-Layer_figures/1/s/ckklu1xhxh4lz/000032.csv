@@ -1,0 +1,3 @@
+"0","# symbols(x=20,y=dim(data)[1]*0.96,rectangles=rbind(c(30,dim(data)[1]*0.06)),add=T,inches=F,bg = ""white"",fg = ""white"")"
+"0","data = EBImage::medianFilter(data,5)"
+"0","par(xaxs=""r"")"

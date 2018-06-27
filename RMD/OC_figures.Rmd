@@ -1,0 +1,286 @@
+---
+title: "OC_figures"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T,warning = F,error = F,message = F,fig.path = "../figures/",dev = c("png"),dpi=300)
+library(DLC)
+```
+
+## Introduction
+
+All figures for the OC paper in one document, iterated slowly but surely
+
+## Fig 1. Apparatus
+
+
+## Fig 2. Electronic
+
+## Fig 3. application
+
+```{r,OC_Fig_3,fig.height = 5.4,fig.width=3.33,fig.cap="Figure 3. Sample application evaluation before development via spray-on (A) and inkjet (B) application, before elution with spray-on (C) and inkjet (D), densitogram of the inkjet (E) and picture of the HP C6602 cartridge (F)."}
+n=2
+# layout(cbind(c(1,1,1,2,3,3,3,4),c(5,5,5,5,6,6,6,6)))
+layout(rbind(c(1,2),c(3,4),c(3,4),
+             c(6,6),c(6,6),c(6,6),
+             c(5,5),c(5,5),c(5,5)
+             ))
+par(mgp=c(1.5,0.5,0))
+
+## before appli
+before_appli = f.read.image(source = paste0("../data/n",n,"_clean.jpg"))
+before_appli1 = before_appli[(dim(before_appli)[1]-100):dim(before_appli)[1]-35,,]
+before_appli2 = before_appli[100:1+20,dim(before_appli)[2]:1,]
+par(yaxs="i",xaxs="i",xaxt="n",mar=c(0.5,2.5,0.5,0))
+raster(before_appli1,yaxt="n")
+text(y=80,x=-150,pos=4,cex=2,"A",xpd=NA)
+par(yaxs="i",xaxs="i",xaxt="n",mar=c(0.5,1.5,0.5,1))
+raster(before_appli2,yaxt="n")
+text(y=80,x=-90,pos=4,cex=2,"B",xpd=NA)
+# axis(2,at=seq(from = 50,to = 496,by = (496-50)/10),labels = seq(from = 0,to = 100,by = 10),las=2,hadj = 0.7)
+
+
+## after appli
+data = f.read.image(source = paste0("../data/n",n,"_dev.jpg"))
+data1 = data[(dim(before_appli)[1]-250):(dim(data)[1]-50)-15,,]
+data2 = data[250:50,dim(before_appli)[2]:1,]
+# data1 = data[497:dim(data)[1],500:900,]
+# data2 = data[496:1,505:920,]
+par(yaxs="i",xaxs="i",xaxt="n",mar=c(0.5,2.5,0.5,0))
+raster(data1,yaxt="n")
+text(y=190,x=-150,pos=4,cex=2,"C",xpd=NA)
+mtext(expression(italic(hR) [F]), side=2,line = 1.25,cex=0.7)
+axis(2,at=seq(from = 0,to = 496-50,length.out = 11),labels = seq(from = 0,to = 100,by = 10),las=0)
+par(mar=c(0.5,1.5,0.5,1))
+raster(data2,yaxt="n")
+text(y=190,x=-90,pos=4,cex=2,"D",xpd=NA)
+
+## inkjet calib
+# par(yaxs="r",xaxs="r",mar=c(2.5,2.5,0.5,1.5),xaxt="s",mgp=c(1.5,0.5,0))
+# par(mgp=c(1.5,0.5,0))
+data = read.csv(paste0("../data/preservatives_repro_n",n,"_ats4.txt"),row.names = NULL,dec = ",",sep = ";")
+# for(i in 2:6){
+#   if(i == 2){
+#     plot(x=data[,1]*100,y=data[,i],xlab=expression(italic(hR) [F]),ylab="Intensity [AU]",type="l",col=i-1,ylim=c(0,max(data[,2:6])),xlim=c(-0.05,50))
+#   }else{
+#     plot(x=data[,1]*100,y=data[,i],xlab="",ylab="",xaxt="n",yaxt="n",type="l",col=i-1,ylim=c(0,max(data[,2:6])),xlim=c(-0.05,50))
+#   }
+#   par(new=T)
+# }
+# par(new=F)
+# legend("topright",legend=c("200 nL","400 nL","600 nL","800 nL","1000 nL"),cex = 1,pch=1,col=c(1,2,3,4,5))
+# text(y=150,x=-2,pos=4,cex=2,"E")
+
+par(yaxs="r",xaxs="r",mar=c(2.5,2.5,0.5,1),xaxt="s",mgp=c(1.25,0.5,0))
+par(mgp=c(1.5,0.5,0))
+data = read.csv(paste0("../data/preservatives_repro_n",n,"_inkjet.txt"),row.names = NULL,dec = ",",sep = ";")
+for(i in 2:6){
+  if(i == 2){
+    plot(x=data[,1]*100,y=data[,i],xlab=expression(italic(hR) [F]),ylab="Intensity [AU]",type="l",col=i-1,ylim=c(0,max(data[,2:6])),xlim=c(-0.05,50))
+  }else{
+    plot(x=data[,1]*100,y=data[,i],xlab="",ylab="",xaxt="n",yaxt="n",type="l",col=i-1,ylim=c(0,max(data[,2:6])),xlim=c(-0.05,50))
+  }
+  par(new=T)
+}
+par(new=F)
+legend("topright",legend=c("2000 drops","4000 drops","6000 drops","8000 drops","10000 drops"),cex = 1,pch=1,col=c(1,2,3,4,5),bty = "n")
+text(y=max(data[,2:6])*0.95,x=-9.5,pos=4,cex=2,"F",xpd=NA)
+pos = structure(list(x = c(3, 8, 13,
+28)-1, y = c(310, 250,
+200, 200)), .Names = c("x", "y"))
+text(x=pos$x,y=pos$y,labels = c("PP", "EP", "MP", "BA"),pos=4,cex=1,srt=0)
+
+par(yaxs="r",xaxs="r",mar=c(2.5,2.5,0.5,1),xaxt="s",mgp=c(1.25,0.5,0))
+par(mgp=c(1.5,0.5,0))
+data = read.csv(paste0("../data/preservatives_repro_n",n,"_ats4.txt"),row.names = NULL,dec = ",",sep = ";")
+for(i in 2:6){
+  if(i == 2){
+    plot(x=data[,1]*100,y=data[,i],xlab=expression(italic(hR) [F]),ylab="Intensity [AU]",type="l",col=i-1,ylim=c(0,max(data[,2:6])),xlim=c(-0.05,50))
+  }else{
+    plot(x=data[,1]*100,y=data[,i],xlab="",ylab="",xaxt="n",yaxt="n",type="l",col=i-1,ylim=c(0,max(data[,2:6])),xlim=c(-0.05,50))
+  }
+  par(new=T)
+}
+par(new=F)
+legend("topright",legend=c(expression(paste("0.3 ", mu, "L")),
+                           expression(paste("0.6 ", mu, "L")),
+                           expression(paste("0.9 ", mu, "L")),
+                           expression(paste("1.2 ", mu, "L")),
+                           expression(paste("1.5 ", mu, "L"))),cex = 1,pch=1,col=c(1,2,3,4,5),bty = "n")
+text(y=max(data[,2:6])*0.95,x=-9.5,pos=4,cex=2,"E",xpd=NA)
+pos = structure(list(x = c(5.68842959427208, 10.5261980906921, 16.2240143198091, 
+32.3499093078759), y = c(213.72548558467, 171.172974517012, 138.90788370747, 
+128.620463449355)), .Names = c("x", "y"))
+text(x=pos$x,y=pos$y,labels = c("PP", "EP", "MP", "BA"),pos=4,cex=1,srt=0)
+
+## hardware pict
+# par(mar=rep(0.5,4),xaxt="n",yaxt="n",xaxs="i",yaxs="i")
+# data = "~/MEGA/OC/data/hardware pict/SA01.jpg" %>% f.read.image
+# data %>% raster
+# text(y=dim(data)[1]*0.92,x=0,pos=4,cex=2,"F",col="white",offset = 0.2)
+
+```
+
+
+## Fig 4. development
+
+```{r,OC_Fig_4,fig.height=5.36,fig.width=3.33,eval=T,fig.cap="Figure 4: Inkjet based development with hardware picture (A), separation of preservatives (B) and dyes on reverse phase (C)."}
+## 3744/2104
+## need dyes and preservatives dev
+layout(cbind(c(rep(1,11),rep(2,9),rep(3,9))))
+par(xaxt="n",yaxt="n",xaxs="i",yaxs="i",mar=rep(0,4))
+
+data = f.read.image("../data/IMG_5448.JPG")
+raster(data)
+text(y=dim(data)[1]*0.9,x=0,pos=4,cex=2,"A",col="white")
+
+par(mar=c(0.5,2.75,0.5,0),mgp=c(1.5,0.5,0),yaxt="s")
+data = f.read.image("../data/preservatives_long_n0_second_development.jpg")[470:1,18:944,]
+raster(data,yaxt="n",ylim=c(100,dim(data)[1]-100))
+text(y=dim(data)[1]-130,x=0,pos=2,cex=2,"B",xpd=NA,offset = 1.5)
+axis(side = 2,at = seq(from = dim(data)[1]*28/50,to=dim(data)[1],length.out = 6),labels=c(0,20,40,60,80,100),las=1)
+axis(side = 2,at = seq(from = dim(data)[1]*22/50,to=0,length.out = 6),labels=c(0,20,40,60,80,100),las=1)
+mtext(expression(italic(hR) [F]), side=2,line = 1.25,cex=0.7)
+
+data = f.read.image("../data/dye_RP18W_n10.jpg")[470:1,40:960,]
+raster(data,yaxt="n",ylim=c(100,dim(data)[1]-100))
+# text(y=dim(data)[1]*0.9,x=0,pos=4,cex=2,"C")
+text(y=dim(data)[1]-130,x=0,pos=2,cex=2,"C",xpd=NA,offset = 1.5)
+axis(side = 2,at = seq(from = dim(data)[1]*28/50,to=dim(data)[1],length.out = 6),labels=c(0,20,40,60,80,100),las=1)
+axis(side = 2,at = seq(from = dim(data)[1]*22/50,to=0,length.out = 6),labels=c(0,20,40,60,80,100),las=1)
+mtext(expression(italic(hR) [F]), side=2,line = 1.25,cex=0.7)
+
+```
+
+
+
+
+## Fig 5. Visualization UV
+
+```{r,OC_Fig_5,fig.height=3.5,fig.width=3.33,fig.cap="Figure 5: Comparison of visualization, images and video-densitogram of the dashed lines. OC with 800 ms and ISO 200 uncorrected: 6.4 %RSD (A), corrected: 6 %RSD (B), OC with 200 ms and ISO 800 uncorrected: 4.6 %RSD (C) and corrected: 3.4 %RSD (D), commercial instrument with 50 ms: 3.7 %RSD (E) and picture of the visualization bloc (F)."}
+## need 3 pictures and corresponding video densitograms, may be repro value in figures ?
+layout(cbind(cbind(c(1,3,5),c(1,3,5),c(2,4,6)),cbind(c(1,3,5),c(1,3,5),c(2,4,5))+6))
+
+par(mar=c(0,0,0,0),yaxt="n",xaxs="i",yaxs="i")
+OC = f.read.image("../data/Visu_n17/200ms_iso_800.jpg") # 6.8%
+raster(OC,xaxt="n",yaxt="n")
+text(y=dim(OC)[1]*0.85,x=0,pos=4,cex=2,"A",offset = 0.2)
+x_OC = dim(OC)[2]/2-20
+abline(v=x_OC,lty=2)
+plot(x=1-OC[,x_OC,2],y=seq(dim(OC)[1]),xlim=c(0,1),ylim=c(dim(OC)[1],1),ylab="",main="",type="l",xaxt="n",lwd=0.5)
+
+par(mar=c(0,0,0,0),yaxt="n")
+OC = f.read.image("../data/Visu_n17/800ms_iso_200.jpg") # 4.6%
+raster(OC,xaxt="n",yaxt="n")
+text(y=dim(OC)[1]*0.85,x=0,pos=4,cex=2,"C",offset = 0.2)
+x_OC = dim(OC)[2]/2-20
+abline(v=x_OC,lty=2)
+plot(x=1-OC[,x_OC,2],y=seq(dim(OC)[1]),xlim=c(0,1),ylim=c(dim(OC)[1],1),ylab="",main="",type="l",xaxt="n",lwd=0.5)
+
+par(mar=c(0,0,0,0))
+CAMAG = f.read.image("../data/visu_n17_50ms.jpg") # 3.7%
+raster(CAMAG,xaxt="n",yaxt="n")
+text(y=dim(CAMAG)[1]*0.85,x=0,pos=4,cex=2,"E",offset = 0.2)
+x_CAMAG = dim(CAMAG)[2]/2
+abline(v=x_CAMAG,lty=2)
+# par(xaxt="s",yaxt="n",xaxs="r",yaxs="r")
+plot(x=1-CAMAG[,x_CAMAG,2],y=seq(dim(CAMAG)[1]),xlim=c(0,1),ylim=c(dim(CAMAG)[1],1),xlab="",xaxt="n",ylab="",main="",type="l",yaxt="n",lwd=0.5)
+
+par(mar=c(0,0,0,0))
+OC_corrected = f.read.image("../data/Visu_n17_processed_renorm//200ms_iso_800.jpg") # 6.0%
+raster(OC_corrected,xaxt="n",yaxt="n")
+text(y=dim(OC_corrected)[1]*0.85,x=0,pos=4,cex=2,"B",offset = 0.2)
+x_OC_corrected = dim(OC_corrected)[2]/2-20
+abline(v=x_OC_corrected,lty=2)
+plot(x=1-OC_corrected[,x_OC,2],y=seq(dim(OC_corrected)[1]),xlim=c(0,1),ylim=c(dim(OC_corrected)[1],1),ylab="",main="",type="l",xaxt="n",lwd=0.5)
+
+par(mar=c(0,0,0,0))
+OC_corrected = f.read.image("../data/Visu_n17_processed_renorm//800ms_iso_200.jpg") # 3.4%
+raster(OC_corrected,xaxt="n",yaxt="n")
+text(y=dim(OC_corrected)[1]*0.85,x=0,pos=4,cex=2,"D",offset = 0.2)
+x_OC_corrected = dim(OC_corrected)[2]/2-20
+abline(v=x_OC_corrected,lty=2)
+plot(x=1-OC_corrected[,x_OC,2],y=seq(dim(OC_corrected)[1]),xlim=c(0,1),ylim=c(dim(OC_corrected)[1],1),ylab="",main="",type="l",xaxt="n",lwd=0.5)
+
+## hardware pict
+par(mar=c(0,0,0,2),xaxt="n",yaxt="n",xaxs="i",yaxs="i")
+data = "../data/SA02.png" %>% f.read.image
+data %>% raster
+text(y=dim(data)[1]*0.85,x=0,pos=4,cex=2,"F",col="white",offset = 0.2)
+
+
+
+```
+
+
+
+```{r,OC_Fig_6,fig.width=3.33,fig.height=4}
+ms = "auto"
+ISO = "auto"
+x = 375
+normal = F
+# h = 920:150
+# h2=500:100
+lab_ratio = 0.75
+
+x = 900
+store = list()
+
+# layout(cbind(1:3,c(6,4,5)))
+layout(cbind(c(1,6,2,4,3,5)))
+
+par(mar=c(0,0.1,0,0.1),xaxt="n",yaxt="n",xaxs="i",yaxs="i")
+it=0
+for(i in c("White","Blue","Red")){
+  it=it+1
+  path = paste0("../data/20180524_11_16_12_dyes_utlc_dev/",ms,"ms_iso_",ISO,"_",i,".jpg")
+  
+  data = f.read.image(path)
+  data= EBImage::rotate(data,1)
+  # data = data[(dim(data)[1]/2):dim(data)[1],dim(data)[2]:1,]
+  data = data[2035-(1090:630),1930:40,]
+  
+  # store[[i]] = f.eat.image(data,largeur = 100,band = 5,dist.gauche = 18,ecart = 1.6,plotting = F,tolerance = 1,nbr.band = 10,cropping=10)
+  # store[[i]] = abind(store[[i]],apply(store[[i]],c(1,2),mean))
+  if(normal){data = normalize(data)}
+  chrom.raster(data,x,edge = 20,normalization = T,lwd=1)
+  text(x=0,y=dim(data)[1]*lab_ratio,pos=4,cex=2,c("A","C","E")[it])
+  # raster(data)
+}
+path = paste0("../data/20180524_11_16_12_dyes_utlc_dev/",ms,"ms_iso_",ISO,"_","White",".jpg")
+data = f.read.image(path)
+data= EBImage::rotate(data,1)
+# data = data[(dim(data)[1]/2):dim(data)[1],dim(data)[2]:1,]
+data = data[2035-(1090:630),1930:40,]
+# chrom.raster(data,x,edge = 20,normalization = T,lwd=1)
+
+if(normal){data = normalize(data)}
+# f=f.eat.image(data,largeur = 100,band = 5,dist.gauche = 18,ecart = 1.6,plotting = T,tolerance = 1,nbr.band = 10,cropping=10)
+for(i in c(3,1)){
+  chrom.raster(data[,,i],x,edge = 20,normalization = T)
+  text(x=0,y=dim(data)[1]*lab_ratio,pos=4,cex=2,c("F","C","D")[i])
+}
+  
+
+  path = paste0("../data//dye_H2O-merck_n4_R_3.jpg")
+data = f.read.image(path)
+data = data[(dim(data)[1]/2):(dim(data)[1]-10),dim(data)[2]:10,]
+if(normal){data = normalize(data)}
+# store[["CAMAG"]] = f.eat.image(data,largeur = 100,band = 4,dist.gauche = 4.5,ecart = 2.25,plotting = F,tolerance = 0)
+chrom.raster(data,x/2+20,edge = 10,normalization = T)
+text(x=0,y=dim(data)[1]*lab_ratio,pos=4,cex=2,"B")
+
+pos = structure(list(x = c(1010.575580222, 1100.31967709384, 1078.42341069627, 
+1055.80746720484, 1095.087790111, 1064.13965691221, 1065.32996972755, 
+1070.0912209889, 1008.19495459132, 1009.38526740666, 1011.76589303734, 
+1033.19152371342, 1002.24339051463, 1058.18809283552), y = c(-845.222222222223, 
+-787.296296296297, -613.518518518519, -379.296296296297, -328.925925925926, 
+-291.148148148148, -142.555555555556, -44.3333333333335, 101.740740740741, 
+154.62962962963, 194.925925925926, 333.444444444445, 391.37037037037, 
+436.703703703704)), .Names = c("x", "y"))
+
+text(x=pos$x,y=pos$y,labels = c("E131","E122","E131","E105","E131","E122","E105","E122","E105","E131","E122","E105","E131","E122"),xpd=NA,cex = 0.8)
+```
+
+

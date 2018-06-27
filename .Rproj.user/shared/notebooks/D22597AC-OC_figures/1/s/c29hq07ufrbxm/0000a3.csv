@@ -1,0 +1,10 @@
+"0","## need 3 pictures and corresponding video densitograms, may be repro value in figures ?"
+"0","layout(cbind(cbind(c(1,3,5),c(1,3,5),c(2,4,6)),cbind(c(1,3,5),c(1,3,5),c(2,4,5))+6))"
+"0","par(mar=c(0,0,0,0),yaxt=""n"",xaxs=""i"",yaxs=""i"")"
+"0","OC = f.read.image(""../data/Visu_n17/200ms_iso_800.jpg"") # 6.8%"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"0","raster(OC,xaxt=""n"",yaxt=""n"")"

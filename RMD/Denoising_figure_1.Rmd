@@ -1,0 +1,103 @@
+---
+title: "Denoising paper ; Pipelines"
+author: "Dimitri Fichou"
+date: "March 3, 2016"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,fig.path="../figures/",dev=c("png")) 
+library(DLC)
+data <- f.read.image("../data/bioassay-1.jpg",height = 256)
+```
+
+```{r process,dpi=300, cache=T,echo=F,warning=F,message=F}
+conv_pip_ter <- 1
+hidden_pip_ter <- 8
+numepochs_pip_ter <- 100
+batchsize_pip_ter <- 1000
+learningrate_pip_ter <- 0.1
+momentum_pip_ter <- 0.9
+cd_pip_ter <- 2
+
+decon_pip_3 <- data %>% deconstruct.convol(margin = 3,transform = F,conv_width = conv_pip_ter)
+model_pip_3 <- rbm.train(decon_pip_3,hidden = hidden_pip_ter,numepochs = numepochs_pip_ter,batchsize = batchsize_pip_ter,learningrate = learningrate_pip_ter,momentum = momentum_pip_ter,cd = cd_pip_ter,verbose = T)
+recon_pip_3 <- decon_pip_3 %>% rbm.up(model_pip_3,.) %>% rbm.down(model_pip_3,.) %>%
+  reconstruct.convol(3,F,dim(data),conv_pip_ter)
+```
+
+
+
+```{r Denoising_Fig_1,fig.height=5,fig.width=7,dpi=300, cache=F,echo=F,warning=F,message=F}
+data_pip_3_patch_1 <- data[(dim(data)[1]-86):(dim(data)[1]-88),491:493,]
+par(mfrow=c(1,1),mar=c(0,0,0,0),oma=c(0,0,0,0),bty="n",xaxt="n",yaxt="n")
+# par(mfrow=c(1,1),mar=c(2,2,4,0),oma=c(0,0,0,0),bty='o',xaxt="s",yaxt="s")
+plot(x=c(-2.25,3),y=c(0,5.5+0.25),type="n")
+# y=1 x=0.5: input picture zoom
+# rasterImage(data_pip_3_zoom,-0.12,0.2,0.12,1.2,interpolate=F)
+rasterImage(data,-2,0.2,0.25,1.2,interpolate=F)
+symbols(x=-0.875,y=0.7,rectangles=matrix(c(2.25,1),ncol=2,nrow=1),inches=F,add=T)
+text(x=-0.875,y=0.2,pos=1,labels="Input",cex=0.8)
+# y= 2 : deconstruct function, show patch and deconstruction
+arrows(x0 = c(-0),x1 = c(-0),y0 = c(1.3),y1 = c(2.7),length = 0.1,lwd=1.5)
+text(x=-0,y=2,pos=2,labels="1. Deconstruction\nfrom pixel patches\nto visible unit states",cex=0.8)
+##symbols(x=0.1,y=2,rectangles=matrix(c(2.7,1),ncol=2,nrow=1),inches=F,add=T,lty=2)
+
+text(x=-0.05,y=3,pos=2,labels="Visible layer of binary units",cex=0.8)
+symbols(x=-0.8,y=3,rectangles=matrix(c(1.5,0.3),ncol=2,nrow=1),inches=F,add=T)
+arrows(x0 = c(-0),x1 = c(-0),y0 = c(3.3),y1 = c(4.2),length = 0.1,lwd=1.5)
+text(x=-0,y=3.75-0.25/2,pos=2,labels="3. Calculation\nof the hidden unit\nstates based on\nvisible unit states",cex=0.8)
+text(x=-0.05,y=4.5,pos=2,labels="Hidden layer of binary units",cex=0.8)
+symbols(x=-0.8,y=4.5,rectangles=matrix(c(1.5,0.3),ncol=2,nrow=1),inches=F,add=T)
+# text(x=0,y=6.2,pos=2,labels="View of the\n hidden units")
+
+# rasterImage(recon_pip_3_zoom,1.88,0.2,2.12,1.2,interpolate=F)
+rasterImage(recon_pip_3,0.75,0.2,3,1.2,interpolate=F) 
+symbols(x=1.875,y=0.7,rectangles=matrix(c(2.25,1),ncol=2,nrow=1),inches=F,add=T)
+text(x=1.875,y=0.2,pos=1,labels="Output",cex=0.8)
+# y= 2 : deconstruct function, show patch and deconstruction
+arrows(x0 = c(2),x1 = c(2),y1 = c(1.3),y0 = c(2.7),length = 0.1,lwd=1.5)
+text(x=2,y=3.75-0.25/2,pos=4,labels="4a. Calculation\n of the visible unit\n states based on\n hidden unit states",cex=0.8)
+arrows(x0 = c(2),x1 = c(2),y1 = c(3.3),y0 = c(4.2),length = 0.1,lwd=1.5)
+text(x=2,y=2,pos=4,labels="5. Reconstruction\ninto the original\nformat",cex=0.8)
+##symbols(x=1.8,y=2,rectangles=matrix(c(2.5,1.1),ncol=2,nrow=1),inches=F,add=T,lty=2)
+
+
+arrows(x0 = c(1),x1 = c(1),y0 = c(4.6),y1 = c(5)+0.25,length = 0.1,lwd=1.5)
+text(x=1,y=4.8+0.25/2,pos=4,labels="4b. Reconstruction into a new format\nOne new channel for each hidden unit",cex=0.8)
+text(x=1,y=5.2+0.25,labels="Extracted features",cex=0.8,offset = 0.75)
+symbols(x=1,y=5.2+0.25,rectangles=matrix(c(1.05,0.3),ncol=2,nrow=1),inches=F,add=T)
+
+# symbols(x=-1.5,y=3.75,circles = 0.25,inches=F,add=T,lwd=1.5)
+# arrows(x0 = -1.75,x1 = -1.75,y0 = 3.7,y1 = 3.8,length = 0.1,lwd=1.5)
+text(x=-1.25,y=3.75-0.25/2,pos=2,labels="2. Training:\niteration of the\nweights to maximize\nthe likelyhood",cex=0.8)
+arrows(x0 = c(-1.25),x1 = c(-1.25),y0 = c(3.3),y1 = c(4.2),length = 0.1,lwd=1.5,code = 3)
+
+rasterImage(data_pip_3_patch_1,0.9,1.8,1.1,2.2,interpolate=F)
+text(x=1,y=1.8,pos=1,labels="Pixel patches",cex=0.8)
+# arrows(x1=0.7,y1=1.8,x0=0.6,y0=1.3,length = 0.05)
+# arrows(x1=1.4,y0=1.8,x0=1.3,y1=1.3,length = 0.05)
+# arrows(x0=1.1,y0=1.8,x1=1.88,y1=1.2,length = 0.05)
+
+symbols(x=seq(0.1,1.9,length.out = 27),y=rep(3,27),circles = rep(0.03,27),inches=F,add=T)
+arrows(x0=rep(c(rep(0.93,3),rep(1,3),rep(1.07,3)),3),x1=seq(0.1,1.9,length.out = 27),y0=c(rep(2.12,9),rep(2.0,9),rep(1.88,9)),y1=2.99,col=c("red","green","blue"),length=0,lwd=1)
+# y = 4 : weight matrix multiplication, one arrow up at x = 0.5, one down at x=1.5
+arrows(x0=rep(seq(0.1,1.9,length.out = 27),8),x1=rep(seq(0.1,1.9,length.out = 8),27),y0=rep(3,216),y1=rep(4.5,216),length=0,lwd=0.5)
+# y= 5 : hidden units, 8 rectanle with the zoom view from those units
+symbols(x=seq(0.1,1.9,length.out = 8),y=rep(4.5,8),circles = rep(0.12,8),inches=F,add=T)
+unit_patch_1 <- decon_pip_3 %>% rbm.up(model_pip_3,.) %>% reconstruct(3,F,dim(data))
+# for(i in seq(8)){unit_patch_1[(256-80):(256-90),470:500,i] %>% normalize %>% rasterImage(xleft=seq(0.1,1.9,length.out = 8)[i]-0.12,xright = seq(0.1,1.9,length.out = 8)[i]+0.12,ybottom = 6.2-0.5,ytop = 6.2+0.5,interpolate=F)}
+# ANN rectangles
+symbols(x=0.375,y=4.125+0.25/3,rectangles=matrix(c(5.625,2.625+0.375),ncol=2,nrow=1),inches=F,add=T,lty=2)
+text(x=-2.4,y=5.25+0.25,pos=4,labels="Artificial neural network",font = 2) 
+# symbols(x=-0.55,y=5.05,rectangles=matrix(c(1,0.625),ncol=2,nrow=1),inches=F,add=T,lty=1)
+
+# Extracted features
+# symbols(x=3.5,y=4.875,rectangles=matrix(c(1.125,0.875),ncol=2,nrow=1),inches=F,add=T,lty=3)
+# text(x=3,y=4.75,labels="The hidden unit states \ncould be used to \ngenerate new \nselective features.",pos=4,cex=0.75)
+
+# Training
+# symbols(x=3.5,y=3.55,rectangles=matrix(c(1,1.25),ncol=2,nrow=1),inches=F,add=T,lty=3)
+# text(x=3,y=3.375,labels="Model training:\n\nIterative adjustment \nof the weight matrix\nto fit the output\ngiven the input.",pos=4,cex=0.75)
+```
+

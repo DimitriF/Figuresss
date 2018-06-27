@@ -1,0 +1,1 @@
+"0","symbols(x=x,y=dim(data)[1]/2,rectangles=rbind(c(2*ecart+4,dim(data)[1])),add=T,inches=F,lty=2)"

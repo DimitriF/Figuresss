@@ -1,0 +1,16 @@
+"0","layout(rbind(c(1,1,1,2)))"
+"0","par(xaxs=""i"",yaxs=""i"",mgp=c(2,1,0))"
+"0","data = f.read.image(""../data/plate_87_developed_T.jpg"",height=992) %>% EBImage::rotate(-0.5)"
+"2","Error in readTIFF(i, native = F) : 
+  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
+"
+"2","Error in readPNG(source = i, native = F) : file is not in PNG format
+"
+"0","data = data[992 - 700:50,105:545,]"
+"0","x = 246 "
+"0","ecart = 4"
+"0","# data = data[992:1,,]"
+"0","# x=570+340"
+"0","par(mar=c(5,3.5,0.5,0.1))"
+"0","    "
+"0","raster(data,xaxt=""n"",yaxt=""n"",interpolate = T)"
