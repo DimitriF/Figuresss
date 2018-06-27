@@ -2,7 +2,7 @@
 
 Collection of figures published in peer review articles.
 
-Disclaimer: multiple are missing and there is no garanty that those are the last version, also, some data preprocessing were needed here and there and are not included in the code.
+Disclaimer: multiple figures are missing and there is no guarantee that those are the last version, also, some data preprocessing were needed here and there and are not included in the code.
 
 ## rtlc
 
@@ -44,8 +44,11 @@ Disclaimer: multiple are missing and there is no garanty that those are the last
 ![OC figure 3](figures/OC_Fig_3-1.png)
 
 ![OC figure 4](figures/OC_Fig_4-1.png)
+
 ![OC figure 5](figures/OC_Fig_5-1.png)
+
 ![OC figure 6](figures/OC_Fig_6-1.png)
+
 ## Introduction
 
 ![Introduction data analysis](figures/Intro_data_analysis-1.png)
