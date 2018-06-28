@@ -1,9 +1,0 @@
-"0","image <- DLC::f.read.image(""/home/clau/Dropbox/rTLC/Propolis-silicate/1.jpg"",126)"
-"2","Error in readTIFF(i, native = F) : 
-  pkg:tiff: Not a TIFF or MDI file, bad magic number 55551 (0xd8ff)
-"
-"2","Error in readPNG(source = i, native = F) : file is not in PNG format
-"
-"0","layout(rbind(c(1),c(1),c(2),c(2)))"
-"0","par(mar=c(0,0,0,0),xaxt=""n"",yaxt=""n"",bty=""n"")"
-"0","plot(x=c(-60,200),y=c(1.1,4),type=""n"")"

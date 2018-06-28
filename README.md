@@ -1,8 +1,18 @@
 ## Figuresss
 
-Collection of figures published in peer review articles.
+Collection of figures published in peer review articles, all made in base R.
 
 Disclaimer: multiple figures are missing and there is no guarantee that those are the last version, also, some data preprocessing were needed here and there and are not included in the code.
+
+## Dependencies
+
+Multiple dependencies are needed, the most important being DLC which must be installed from GitHub:
+
+```r
+devtools::install_github("DLC","dimitrif")
+```
+
+Otherwise, most of them should be installed from CRAN mirrors.
 
 ## rtlc
 
@@ -16,13 +26,13 @@ Disclaimer: multiple figures are missing and there is no guarantee that those ar
 
 ![Layer_Fig 3-1.png](figures/Layer_Fig 3-1.png)
 
-![Layer_Fig 4-1.png](figures/Layer_Fig_4-1.png)
+![Layer_Fig 4-1](figures/Layer_Fig_4-1.png)
 
-![Layer_Fig 5-1.png](figures/Layer_Fig_5-1.png)
+![Layer_Fig 5-1](figures/Layer_Fig_5-1.png)
 
-![Layer_Fig 6-1.png](figures/Layer_Fig_6-1.png)
+![Layer_Fig 6-1](figures/Layer_Fig_6-1.png)
 
-![Layer_Fig 7-1.png](figures/Layer_Fig_7-1.png)
+![Layer_Fig 7](figures/Layer_Fig_7-1.png)
 
 ## quanTLC
 
